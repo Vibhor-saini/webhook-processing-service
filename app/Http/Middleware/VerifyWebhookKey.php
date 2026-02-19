@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Middleware;
+use App\Models\WebhookEndpoint;
 
 use Closure;
 use Illuminate\Http\Request;
@@ -22,12 +23,13 @@ class VerifyWebhookKey
     {
         $key = $request->route('key');
 
-        // temporary valid key
-        if ($key !== 'rohit123') {
-            return response()->json([
-                'error' => 'Invalid webhook key'
-            ], 403);
-        }
+    $endpoint = WebhookEndpoint::where('webhook_key', $key)->first();
+
+    if (!$endpoint) {
+        return response()->json([
+            'error' => 'Invalid webhook key'
+        ], 403);
+    }
 
         return $next($request);
     }
