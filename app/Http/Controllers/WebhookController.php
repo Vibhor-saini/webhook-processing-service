@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\WebhookEvent;
 use App\Models\WebhookEndpoint;
+use App\Jobs\ProcessWebhookEvent;
 
 class WebhookController extends Controller
 {
@@ -32,14 +33,16 @@ public function receive($key, Request $request)
     $eventName = $payload['event'] ?? null;
 
     // store event
-    WebhookEvent::create([
+    $event = WebhookEvent::create([
         'webhook_endpoint_id' => $endpoint->id,
         'event_name' => $eventName,
         'payload' => $payload,
         'provider_event_id' => $providerEventId,
         'received_at' => now(),
-        'status' => 'processed'
+        'status' => 'pending'
     ]);
+
+    ProcessWebhookEvent::dispatch($event);
 
     return response()->json([
         'status' => 'event stored'
