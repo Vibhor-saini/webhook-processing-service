@@ -9,7 +9,9 @@ class WebhookEvent extends Model
     protected $fillable = [
         'webhook_endpoint_id',
         'event_name',
-        'payload'
+        'provider_event_id',
+        'payload',
+        'status'
     ];
 
     protected $casts = [
