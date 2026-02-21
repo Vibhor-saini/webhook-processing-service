@@ -1,49 +1,104 @@
 # Webhook Processing Service
 
-This project is a Laravel-based backend service designed to receive and process external webhook events from third-party systems such as booking applications, payment gateways, or form services.
+A Laravel-based backend service that receives, validates, and processes external webhook events from third-party systems such as payment gateways, booking platforms, and form providers.
 
-The system provides a unique webhook URL for each user. When an external platform sends an event to that URL, the server validates the request, stores the event data, and triggers automated actions such as notifications or logging.
+This project simulates a real-world event-driven backend architecture used in modern integrations.
 
-The goal of this project is to simulate a real-world event-driven backend architecture similar to systems used by platforms like Stripe, Shopify, or automation tools.
+---
+
+## Problem
+
+Many external platforms (payment systems, CRMs, form tools) send event notifications to servers using webhooks.  
+If these events are processed synchronously and the server takes too long to respond, the provider retries the request. This leads to:
+
+- Duplicate orders
+- Duplicate payments
+- Multiple notifications
+- Data inconsistency
+
+Reliable webhook handling requires asynchronous processing, retry mechanisms, and failure tracking.
+
+---
+
+## Solution
+
+This service implements a reliable webhook processing workflow:
+
+1. Receive webhook request
+2. Validate the endpoint
+3. Store the event safely
+4. Immediately acknowledge the request (fast response)
+5. Process the event in the background using a queue worker
+6. Track job status and recover from failures
+
+---
+
+## Architecture Flow
+
+External Service  
+→ Webhook Endpoint  
+→ Middleware Verification  
+→ Event Stored in Database  
+→ Job Dispatched to Queue  
+→ Background Worker Processes Event  
+→ Status Updated (pending → processed / failed)
 
 ---
 
 ## Features
 
-- Unique webhook endpoint per user
-- Receive and process POST webhook requests
-- JSON payload validation
+- Secure webhook endpoint validation
 - Event logging and storage
-- Automated action triggering (notifications/logging)
-- RESTful API responses
+- Idempotency (duplicate event prevention)
+- Asynchronous processing using Laravel Queue
+- Background worker execution
+- Job status lifecycle tracking
+- Failed job handling and retry mechanism
+- RESTful JSON responses
 
 ---
 
 ## Tech Stack
 
 - PHP
-- Laravel Framework
+- Laravel
 - MySQL
-- REST API
-- JSON Web Requests
+- REST APIs
+- Queue Workers (Database driver)
 
 ---
 
+## What This Demonstrates
+
+- Handling third-party callbacks (webhooks)
+- Event-driven backend design
+- Asynchronous job processing
+- Failure recovery & retry systems
+- Backend reliability patterns used in production systems
 
 ---
 
-## What This Project Demonstrates
+## Local Setup
 
-- Handling external API callbacks (webhooks)
-- Backend request validation
-- Event-driven processing
-- Integration-ready backend architecture
-- Practical Laravel backend development
+Clone the repository:---
+git clone <your-repo-link>
+cd webhook-processing-service
 
----
+
+Install dependencies:---
+composer install
+
+Create environment file:---
+cp .env.example .env
+php artisan key:generate
+
+php artisan migrate
+
+Start server:--
+php artisan serve
+
+Start queue worker:---
+php artisan queue:work
 
 ## Purpose
-
-This project is created as a backend engineering practice project focused on building real-world integration workflows instead of basic CRUD applications.
-
-
+This project was built to understand how real-world systems reliably process external events using queues and background workers rather than simple CRUD operations.
