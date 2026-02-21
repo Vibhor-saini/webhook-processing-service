@@ -22,5 +22,11 @@ class ProcessWebhookEvent implements ShouldQueue
     public function handle(): void
     {
         \Log::info('Processing webhook event ID: ' . $this->store_event->id);
+        // // mark as processed
+        $this->store_event->status = 'processed';
+        $this->store_event->save();
+
+        // force error
+        // throw new \Exception("Simulated failure");
     }
 }
