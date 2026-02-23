@@ -12,3 +12,8 @@ Route::get('/user', function (Request $request) {
 Route::prefix('webhook')->middleware('webhook.verify')->group(function () {
 Route::post('/{key}', [WebhookController::class, 'receive']);
 });
+
+// 3A3hMjtmYRcUcV10gdi3A2QsYtF_WoayGXT7vQN94fPiYxMf
+// ngrok config add-authtoken 3A3hMjtmYRcUcV10gdi3A2QsYtF_WoayGXT7vQN94fPiYxMf
+
+// https://jenee-multilaciniate-chin.ngrok-free.dev/api/webhook/sumit63542

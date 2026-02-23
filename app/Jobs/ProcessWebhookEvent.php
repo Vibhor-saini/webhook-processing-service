@@ -5,6 +5,7 @@ namespace App\Jobs;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use App\Models\WebhookEvent;
+use App\Handlers\UserCreatedHandler;
 
 class ProcessWebhookEvent implements ShouldQueue
 {
@@ -19,14 +20,14 @@ class ProcessWebhookEvent implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(): void
-    {
-        \Log::info('Processing webhook event ID: ' . $this->store_event->id);
-        // // mark as processed
-        $this->store_event->status = 'processed';
-        $this->store_event->save();
+public function handle(): void
+{
+    $event = $this->store_event;
 
-        // force error
-        // throw new \Exception("Simulated failure");
+    if ($event->event_name === 'user.created') {
+        (new UserCreatedHandler())->handle($event);
+    } else {
+        \Log::info('No handler for event: ' . $event->event_name);
     }
+}
 }
