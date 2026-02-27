@@ -6,10 +6,11 @@ use Illuminate\Http\Request;
 use App\Models\WebhookEvent;
 use App\Models\WebhookEndpoint;
 use App\Jobs\ProcessWebhookEvent;
+use App\Http\Requests\StoreWebhookRequest;
 
 class WebhookController extends Controller
 {
-    public function receive($key, Request $request)
+    public function receive($key, StoreWebhookRequest $request)
     {
 
         if (!$request->isMethod('post')) {
