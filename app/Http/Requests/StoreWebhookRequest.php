@@ -27,4 +27,15 @@ class StoreWebhookRequest extends FormRequest
             'customer' => 'nullable|string',
         ];
     }
+
+    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        throw new \Illuminate\Http\Exceptions\HttpResponseException(
+            response()->json([
+                'status' => 'error',
+                'message' => 'Invalid webhook payload',
+                'errors' => $validator->errors()
+            ], 422)
+        );
+    }
 }

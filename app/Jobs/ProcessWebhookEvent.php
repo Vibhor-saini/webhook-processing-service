@@ -24,10 +24,26 @@ public function handle(): void
 {
     $event = $this->store_event;
 
-    if ($event->event_name === 'user.created') {
-        (new UserCreatedHandler())->handle($event);
-    } else {
-        \Log::info('No handler for event: ' . $event->event_name);
+    try {
+
+        if ($event->event_name === 'booking.created') {
+            // future me booking handler aayega
+            \Log::info('Booking created event handled');
+        } else {
+            \Log::info('No handler for event: ' . $event->event_name);
+        }
+
+        // SUCCESS
+        $event->status = 'processed';
+        $event->save();
+
+    } catch (\Exception $e) {
+
+        // FAILURE
+        $event->status = 'failed';
+        $event->save();
+
+        throw $e; // Laravel ko batana zaruri (failed_jobs me jayegi)
     }
 }
 }
