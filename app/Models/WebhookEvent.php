@@ -17,4 +17,9 @@ class WebhookEvent extends Model
     protected $casts = [
         'payload' => 'array'
     ];
+
+    public function endpoint()
+    {
+        return $this->belongsTo(\App\Models\WebhookEndpoint::class, 'webhook_endpoint_id', 'id');
+    }
 }

@@ -12,4 +12,9 @@ class WebhookEndpoint extends Model
         'name',
         'webhook_key'
     ];
+
+    public function events()
+    {
+        return $this->hasMany(\App\Models\WebhookEvent::class);
+    }
 }
