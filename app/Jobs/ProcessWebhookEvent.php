@@ -7,6 +7,7 @@ use Illuminate\Foundation\Queue\Queueable;
 use App\Models\WebhookEvent;
 use App\Handlers\Webhooks\UserCreatedHandler;
 
+
 class ProcessWebhookEvent implements ShouldQueue
 {
     use Queueable;
