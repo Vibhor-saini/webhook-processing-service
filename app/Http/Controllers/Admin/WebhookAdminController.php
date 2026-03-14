@@ -36,8 +36,10 @@ class WebhookAdminController extends Controller
         $event = WebhookEvent::findOrFail($id);
         ProcessWebhookEvent::dispatch($event);
 
-        return response()->json([
-            'message' => 'Webhook event re-dispatched to queue'
-        ]);
+        // return response()->json([
+        //     'message' => 'Webhook event re-dispatched to queue'
+            
+        // ]);
+        return redirect()->back()->with('success','Webhook retried');
     }
 }
