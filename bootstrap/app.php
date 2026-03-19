@@ -15,6 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'webhook.verify' => \App\Http\Middleware\VerifyWebhookKey::class,
         ]);
+
+        $middleware->redirectGuestsTo(function () {
+            return '/admin/login';
+        });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
