@@ -123,6 +123,9 @@ This project was built to understand how real-world systems reliably process ext
 ### Events
 <img width="952" height="617" alt="image" src="https://github.com/user-attachments/assets/85413475-10a9-4315-83ea-c5f5aaac2953" />
 
+### queue processing:-
+### <img width="1365" height="724" alt="image" src="https://github.com/user-attachments/assets/285e8d5e-1f99-46ed-a5c6-603af1d1ffc3" />
+
 ---
 
 ##  Key Concepts Covered
