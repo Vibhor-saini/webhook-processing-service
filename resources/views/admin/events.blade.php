@@ -1,73 +1,20 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Webhook Events</title>
+@extends('admin.layout')
 
-    <style>
-        body{
-            font-family: Arial, sans-serif;
-            background:#f5f5f5;
-            padding:40px;
-        }
-
-        h1{
-            margin-bottom:20px;
-        }
-
-        table{
-            width:100%;
-            border-collapse: collapse;
-            background:white;
-        }
-
-        th, td{
-            padding:12px;
-            border-bottom:1px solid #ddd;
-            text-align:left;
-        }
-
-        th{
-            background:#333;
-            color:white;
-        }
-
-        .status{
-            padding:4px 8px;
-            border-radius:4px;
-            font-size:12px;
-            color:white;
-        }
-
-        .processed{background:#2ecc71;}
-        .failed{background:#e74c3c;}
-        .pending{background:#f39c12;}
-
-        .retry-btn{
-            background:#3498db;
-            color:white;
-            padding:6px 10px;
-            border:none;
-            border-radius:4px;
-            cursor:pointer;
-        }
-
-        .retry-btn:hover{
-            background:#2980b9;
-        }
-
-    </style>
-
-</head>
-
-<body>
+@section('content')
 
 <h1>Webhook Events</h1>
 
-<table>
+@if(session('success'))
+    <div style="background:#2ecc71;color:white;padding:10px;margin-bottom:20px;">
+        {{ session('success') }}
+    </div>
+@endif
+
+<table style="width:100%;border-collapse:collapse;background:white;margin-top:20px;">
 
     <thead>
-        <tr>
-            <th>ID</th>
+        <tr style="background:#333;color:white;">
+            <th style="padding:10px;">ID</th>
             <th>Event</th>
             <th>Status</th>
             <th>Endpoint</th>
@@ -80,13 +27,21 @@
 
         @foreach($events as $event)
 
-        <tr>
-            <td>{{ $event->id }}</td>
+        <tr style="border-bottom:1px solid #ddd;">
+            <td style="padding:10px;">{{ $event->id }}</td>
 
             <td>{{ $event->event_name }}</td>
 
             <td>
-                <span class="status {{ $event->status }}">
+                <span style="
+                    padding:5px 8px;
+                    color:white;
+                    border-radius:4px;
+                    background:
+                        {{ $event->status == 'processed' ? '#2ecc71' : '' }}
+                        {{ $event->status == 'failed' ? '#e74c3c' : '' }}
+                        {{ $event->status == 'pending' ? '#f39c12' : '' }}
+                ">
                     {{ $event->status }}
                 </span>
             </td>
@@ -98,16 +53,17 @@
             <td>
                 @if($event->status === 'failed')
 
-                <form method="POST" action="/api/admin/events/{{ $event->id }}/retry">
+                <form method="POST" action="/events/{{ $event->id }}/retry">
                     @csrf
-                    <button class="retry-btn">Retry</button>
+                    <button style="padding:6px 10px;background:#3498db;color:white;border:none;border-radius:4px;cursor:pointer;">
+                        Retry
+                    </button>
                 </form>
 
                 @else
                     -
                 @endif
             </td>
-
         </tr>
 
         @endforeach
@@ -116,5 +72,4 @@
 
 </table>
 
-</body>
-</html>
+@endsection

@@ -1,10 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Hash;
 use App\Models\WebhookEndpoint;
 use App\Models\WebhookEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Admin\WebhookAdminController;
 
 // Route::get('/', function () {
 //     return view('admin.login');
@@ -38,14 +40,19 @@ Route::middleware('auth')->group(function () {
         ));
     });
 
+
     Route::get('/admin/events', function () {
         $events = WebhookEvent::with('endpoint')
             ->latest()
-            ->limit(50)
+            ->limit(5)
             ->get();
 
         return view('admin.events', compact('events'));
     });
+    
+    Route::get('/events', [WebhookAdminController::class, 'index']);
+    Route::get('/events/failed', [WebhookAdminController::class, 'failed']);
+    Route::post('/events/{id}/retry', [WebhookAdminController::class, 'retry']);
 });
 
 Route::post('/admin/logout', function () {
@@ -53,11 +60,14 @@ Route::post('/admin/logout', function () {
     return redirect('/admin/login');
 });
 
-
+// ------------------------------------------------------------------
 Route::get('/create-key', function () {
+    $plainKey = 'whk_' . Str::random(40);
     WebhookEndpoint::create([
-        'name' => 'Rohit Plumbing',
-        'webhook_key' => 'rohit123'
+        'name'        => 'Vishal Shop',
+        'webhook_key' => $plainKey,
+        'key_preview' => substr($plainKey, 0, 12) . '...',
     ]);
-    return "Webhook key created";
+
+    return "Key created: " . $plainKey;
 });

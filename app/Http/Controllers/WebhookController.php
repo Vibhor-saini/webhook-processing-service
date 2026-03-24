@@ -7,6 +7,7 @@ use App\Models\WebhookEvent;
 use App\Models\WebhookEndpoint;
 use App\Jobs\ProcessWebhookEvent;
 use App\Http\Requests\StoreWebhookRequest;
+Use Illuminate\Support\Facades\Hash;
 
 class WebhookController extends Controller
 {
@@ -23,6 +24,11 @@ class WebhookController extends Controller
 
         // find endpoint
         $endpoint = WebhookEndpoint::where('webhook_key', $key)->first();
+
+        if (!$endpoint) {
+            return response()->json(['error' => 'Invalid webhook key'], 401);
+        }
+
 
         $payload = $request->all();
 
